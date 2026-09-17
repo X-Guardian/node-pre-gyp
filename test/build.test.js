@@ -78,8 +78,8 @@ test.Test.prototype.stringContains = function(actual, contents, message) {
  */
 function windows_npm_node_gyp_too_old() {
   if (process.platform !== 'win32') return false;
-  const npm_base = path.join(path.dirname(path.dirname(process.execPath)), 'lib/node_modules/npm/');
-  const pkg = path.join(npm_base, 'node_modules/node-gyp/package.json');
+  // on Windows npm sits beside node.exe rather than under lib/
+  const pkg = path.join(path.dirname(process.execPath), 'node_modules/npm/node_modules/node-gyp/package.json');
   if (!existsSync(pkg)) return false;
   return parseInt(require(pkg).version, 10) < MIN_WINDOWS_NODE_GYP_MAJOR;
 }
