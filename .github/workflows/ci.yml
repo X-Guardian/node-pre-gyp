@@ -12,8 +12,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: ['lts/-1', 'lts/*', 'latest']
-        os: [macos-latest, ubuntu-latest, ubuntu-24.04-arm, windows-latest]
+        # DEBUG: trimmed to the only failing combination. Restore before merging:
+        # node-version: ['lts/-1', 'lts/*', 'latest']
+        # os: [macos-latest, ubuntu-latest, ubuntu-24.04-arm, windows-latest, windows-2022]
+        node-version: ['lts/-1']
+        os: [windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7
@@ -21,6 +24,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
+      - name: Upgrade node-gyp if it cannot detect the installed Visual Studio
+        if: runner.os == 'Windows'
+        run: npm run upgrade-node-gyp
       - run: npm audit || true
       - run: npm run lint
       # - run: npm run update-crosswalk  # To support newer versions of Node.js
