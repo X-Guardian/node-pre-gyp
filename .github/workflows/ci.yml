@@ -12,8 +12,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: ['lts/-1', 'lts/*', 'latest']
-        os: [macos-latest, ubuntu-latest, ubuntu-24.04-arm, windows-latest, windows-2022]
+        # DEBUG: trimmed to the only failing combination. Restore before merging:
+        # node-version: ['lts/-1', 'lts/*', 'latest']
+        # os: [macos-latest, ubuntu-latest, ubuntu-24.04-arm, windows-latest, windows-2022]
+        node-version: ['lts/-1']
+        os: [windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7
@@ -34,4 +37,9 @@ jobs:
           node -p "'npm_config_node_gyp=' + process.env.npm_config_node_gyp"
           node -p "require('fs').existsSync(process.env.npm_config_node_gyp || '')"
           node -p "require('./lib/util/compile.js').which_node_gyp()"
+          echo "NPG_TRACE_FILE=$env:RUNNER_TEMP\npg-trace.log" >> $env:GITHUB_ENV
       - run: npm test
+      - name: DEBUG dump child trace
+        if: always() && runner.os == 'Windows'
+        run: Get-Content $env:NPG_TRACE_FILE -Tail 40
+        shell: pwsh
