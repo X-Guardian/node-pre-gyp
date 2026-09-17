@@ -81,12 +81,6 @@ function run(prog, command, args, app, opts, cb) {
     delete opts.npg_debug;
   }
 
-  // DEBUG: remove before merging
-  console.error('[TRACE parent] npm_config_node_gyp=' + process.env.npm_config_node_gyp +
-    ' | opts.env set=' + !!opts.env +
-    ' | opts.env.npm_config_node_gyp=' + (opts.env && opts.env.npm_config_node_gyp) +
-    ' | cwd=' + opts.cwd);
-
   // Finally, execute the command
   cp.exec(final_cmd, opts, (err, stdout, stderr) => {
     if (err) {

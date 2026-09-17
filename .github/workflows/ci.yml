@@ -31,17 +31,4 @@ jobs:
       - run: npm run lint
       # - run: npm run update-crosswalk  # To support newer versions of Node.js
       - run: npm run build --if-present
-      - name: DEBUG which node-gyp the tests will use
-        if: runner.os == 'Windows'
-        run: |
-          node -p "'npm_config_node_gyp=' + process.env.npm_config_node_gyp"
-          node -p "require('fs').existsSync(process.env.npm_config_node_gyp || '')"
-          node -p "require('./lib/util/compile.js').which_node_gyp()"
-          echo "NPG_TRACE_FILE=$env:RUNNER_TEMP\npg-trace.log" >> $env:GITHUB_ENV
-      # DEBUG: npm 10.x overwrites npm_config_node_gyp with its own bundled copy,
-      # so invoke tape via node directly to keep the upgraded node-gyp. Restore `npm test`.
-      - run: node node_modules/tape/bin/tape test/*test.js
-      - name: DEBUG dump child trace
-        if: always() && runner.os == 'Windows'
-        run: Get-Content $env:NPG_TRACE_FILE -Tail 40
-        shell: pwsh
+      - run: npm test

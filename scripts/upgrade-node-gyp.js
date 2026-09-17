@@ -35,7 +35,7 @@ if (!fs.existsSync(upgraded)) {
 }
 console.log(`using node-gyp at ${upgraded}`);
 
-// export for later GitHub workflow steps, which npm would otherwise point back at its own bundled copy
+// export for later GitHub workflow steps; npm resets npm_config_node_gyp to its own bundled copy
 if (process.env.GITHUB_ENV) {
-  fs.appendFileSync(process.env.GITHUB_ENV, `npm_config_node_gyp=${upgraded}\n`);
+  fs.appendFileSync(process.env.GITHUB_ENV, `NODE_PRE_GYP_NODE_GYP=${upgraded}\n`);
 }
