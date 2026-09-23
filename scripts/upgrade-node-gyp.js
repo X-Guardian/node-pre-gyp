@@ -35,7 +35,8 @@ if (!fs.existsSync(upgraded)) {
 }
 console.log(`using node-gyp at ${upgraded}`);
 
-// export for later GitHub workflow steps; npm resets npm_config_node_gyp to its own bundled copy
+// export for later GitHub workflow steps; npm resets npm_config_node_gyp to its own bundled copy,
+// so the tests read this name and pass it down to the commands they run
 if (process.env.GITHUB_ENV) {
-  fs.appendFileSync(process.env.GITHUB_ENV, `NODE_PRE_GYP_NODE_GYP=${upgraded}\n`);
+  fs.appendFileSync(process.env.GITHUB_ENV, `NPG_TEST_NODE_GYP=${upgraded}\n`);
 }

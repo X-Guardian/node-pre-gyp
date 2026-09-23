@@ -53,6 +53,14 @@ function run(prog, command, args, app, opts, cb) {
     }
   }
 
+  // npm resets npm_config_node_gyp to the copy it bundles, so CI passes any upgraded node-gyp
+  // under a name npm leaves alone and we hand it to the child as the config it reads
+  if (process.env.NPG_TEST_NODE_GYP) {
+    opts.env = Object.assign({}, opts.env || process.env, {
+      npm_config_node_gyp: process.env.NPG_TEST_NODE_GYP
+    });
+  }
+
   // unless explicitly provided, lets execute the command inside the app specific directory
   if (!opts.cwd) {
     opts.cwd = path.join(__dirname, app.name);
